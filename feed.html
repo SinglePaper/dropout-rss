@@ -41,13 +41,13 @@
       document.getElementById("output").textContent = filteredXml;
 
       // Create download link
-      const blob = new Blob([filteredXml], { type: "application/rss+xml" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "filtered_dropuot_feed.xml";
-      a.textContent = "Download this filtered feed";
-      document.body.appendChild(a);
+      //const blob = new Blob([filteredXml], { type: "application/rss+xml" });
+      //const url = URL.createObjectURL(blob);
+      //const a = document.createElement('a');
+      //a.href = url;
+      //a.download = "filtered_dropuot_feed.xml";
+      //a.textContent = "Download this filtered feed";
+      //document.body.appendChild(a);
     }
 
     filterFeed();
