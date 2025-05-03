@@ -1,32 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Filtered Dropout.tv RSS Feed</title>
-</head>
-<body>
-  <pre id="output" style="white-space: pre-wrap;"></pre>
+  <title>Filtered RSS Feed</title>
   <script>
-    async function filterFeed() {
+    async function generateFeed() {
       const params = new URLSearchParams(window.location.search);
       const showFilter = params.get("shows")?.split(',').map(s => s.trim().toLowerCase()) || null;
 
       const res = await fetch('dropout_feed.xml');
-      const text = await res.text();
+      const xmlText = await res.text();
       const parser = new DOMParser();
-      const xml = parser.parseFromString(text, "application/xml");
+      const xml = parser.parseFromString(xmlText, "application/xml");
 
       const channel = xml.querySelector('channel');
-      const allItems = Array.from(xml.querySelectorAll('item'));
+      const items = Array.from(xml.querySelectorAll('item'));
       const filteredItems = showFilter
-        ? allItems.filter(item => {
+        ? items.filter(item => {
             const title = item.querySelector('title')?.textContent || '';
             return showFilter.some(show => title.toLowerCase().includes(`[${show}]`.toLowerCase()));
           })
-        : allItems;
+        : items;
 
-      const filteredXml = `
-<?xml version="1.0" encoding="UTF-8"?>
+      const feed = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
 <channel>
   <title>${channel.querySelector('title')?.textContent}</title>
@@ -36,20 +33,14 @@
 </channel>
 </rss>`;
 
-      // Display it
-      document.getElementById("output").textContent = filteredXml;
-
-      // Create download link
-      //const blob = new Blob([filteredXml], { type: "application/rss+xml" });
-      //const url = URL.createObjectURL(blob);
-      //const a = document.createElement('a');
-      //a.href = url;
-      //a.download = "filtered_dropuot_feed.xml";
-      //a.textContent = "Download this filtered feed";
-      //document.body.appendChild(a);
+      document.open("application/rss+xml", "replace");
+      document.write(feed);
+      document.close();
     }
-
-    filterFeed();
+    generateFeed();
   </script>
+</head>
+<body>
+  <!-- The JS will replace this entire body with XML -->
 </body>
 </html>
