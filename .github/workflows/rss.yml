@@ -3,29 +3,34 @@ name: Update RSS Feed
 on:
   schedule:
     - cron: '0 * * * *'  # every hour
-  workflow_dispatch:      # allow manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write  # ✅ This grants permission to push changes
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: true  # ✅ Ensure credentials persist
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-    - name: Generate RSS feed
-      run: python generate_rss.py
+      - name: Generate RSS feed
+        run: python generate_rss.py
 
-    - name: Commit and push
-      run: |
-        git config --global user.name 'github-actions'
-        git config --global user.email 'github-actions@github.com'
-        git add dropout_feed.xml
-        git commit -m "Update RSS feed"
-        git push
+      - name: Commit and push
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add dropout_feed.xml dropout.json
+          git commit -m "Update RSS feed" || echo "No changes to commit"
+          git push
