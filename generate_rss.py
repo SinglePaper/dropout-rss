@@ -51,7 +51,7 @@ os.makedirs("feeds", exist_ok=True)
 for series, videos in videos_by_series.items():
     fg = FeedGenerator()
     fg.title(f'Dropout.tv - {series}')
-    fg.link(href='https://www.dropout.tv/new-releases', rel='alternate')
+    fg.link(href=f'https://www.dropout.tv/{series.lower()}', rel='alternate')
     fg.description(f'Latest releases from Dropout.tv: {series}')
 
     for v in videos:
@@ -63,3 +63,21 @@ for series, videos in videos_by_series.items():
 
     filename = f"feeds/feed-{slugify(series)}.xml"
     fg.rss_file(filename)
+
+import json
+
+feed_index_path = 'feeds.json'
+
+# Load existing feeds.json if it exists
+if os.path.exists(feed_index_path):
+    with open(feed_index_path, 'r') as f:
+        feed_index = json.load(f)
+else:
+    feed_index = {}
+    
+for series in videos_by_series:
+    feed_filename = f'feeds/feed-{slugify(series)}.xml'
+    feed_index[series] = feed_filename
+
+with open('feeds.json', 'w') as f:
+    json.dump(feed_index, f, indent=2)

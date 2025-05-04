@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dropout.tv RSS Feeds</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; }
+    h1 { margin-bottom: 1em; }
+    .feed { margin: 0.5em 0; }
+    a { text-decoration: none; color: blue; }
+  </style>
+</head>
+<body>
+  <h1>Dropout.tv RSS Feeds</h1>
+  <div id="feed-list">Loading feeds...</div>
+
+  <script>
+    fetch('feeds.json')
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('feed-list');
+        container.innerHTML = '';
+        Object.entries(data).forEach(([name, url]) => {
+          const fullUrl = location.href + url;
+          const div = document.createElement('div');
+          div.className = 'feed';
+          div.innerHTML = `<strong>${name}</strong>: <a href="${url}" target="_blank">${fullUrl}</a>`;
+          container.appendChild(div);
+        });
+      })
+      .catch(err => {
+        document.getElementById('feed-list').innerText = 'Failed to load feeds.';
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
