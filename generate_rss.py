@@ -43,6 +43,10 @@ for video in soup.select('.item-type-video'):
 # Group videos by series
 from collections import defaultdict
 videos_by_series = defaultdict(list)
+
+
+all_videos.reverse()
+
 for video in all_videos:
     videos_by_series[video["series"]].append(video)
 
@@ -74,7 +78,7 @@ if os.path.exists(feed_index_path):
         feed_index = json.load(f)
 else:
     feed_index = {}
-    
+
 for series in videos_by_series:
     feed_filename = f'feeds/feed-{slugify(series)}.xml'
     feed_index[series] = feed_filename
