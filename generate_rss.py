@@ -12,8 +12,9 @@ html = requests.get(url).text
 soup = BeautifulSoup(html, 'html.parser')
 
 all_videos = []
-
-for video in soup.select('.item-type-video'):
+video_elements = soup.select('.item-type-video')
+video_elements.reverse()
+for video in video_elements:
     try:
         id = video["data-item-id"]
         link_tag = video.find('a', href=True)
@@ -44,9 +45,6 @@ for video in soup.select('.item-type-video'):
 from collections import defaultdict
 videos_by_series = defaultdict(list)
 
-
-all_videos.reverse()
-
 for video in all_videos:
     videos_by_series[video["series"]].append(video)
 
@@ -60,7 +58,7 @@ for series, videos in videos_by_series.items():
 
     for v in videos:
         fe = fg.add_entry()
-        fe.title(f"[{v['series']}] {v['title']}")
+        fe.title(f"{v['title']} - {v['series']}")
         fe.link(href=v['url'])
         fe.description(f'<img src="{v["thumbnail"]}"/><br/><br/>{v["description"]}<br/><br/>Duration: {v["duration"]}<br/><br/>Tags: {", ".join(v["tags"])}')
         fe.guid(v['url'])
