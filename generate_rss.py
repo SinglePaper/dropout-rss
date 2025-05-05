@@ -52,13 +52,13 @@ for video in all_videos:
 os.makedirs("feeds", exist_ok=True)
 for series, videos in videos_by_series.items():
     fg = FeedGenerator()
-    fg.title(f'Dropout.tv - {series}')
+    fg.title(series)
     fg.link(href=f'https://www.dropout.tv/{series.lower()}', rel='alternate')
-    fg.description(f'Latest releases from Dropout.tv: {series}')
+    fg.description(f'Latest releases from {series} on Dropout.tv')
 
     for v in videos:
         fe = fg.add_entry()
-        fe.title(f"{v['title']} - {v['series']}")
+        fe.title(f"{v['title']}")
         fe.link(href=v['url'])
         fe.description(f'<img src="{v["thumbnail"]}"/><br/><br/>{v["description"]}<br/><br/>Duration: {v["duration"]}<br/><br/>Tags: {", ".join(v["tags"])}')
         fe.guid(v['url'])
