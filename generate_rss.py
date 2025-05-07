@@ -4,6 +4,8 @@ from feedgen.feed import FeedGenerator
 import os
 import re
 
+
+
 def slugify(title):
     return re.sub(r'\W+', '-', title.lower()).strip('-')
 
@@ -16,9 +18,14 @@ video_elements = soup.select('.item-type-video')
 video_elements.reverse()
 for video in video_elements:
     try:
+        # Get video ID
         id = video["data-item-id"]
+
+        # https://www.dropout.tv/dimension-20-s-adventuring-party/season:20/videos/a-cheeseburger-intimidation-check
+
+
         link_tag = video.find('a', href=True)
-        link = link_tag['href'] if link_tag else None
+        link = link_tag['href'].replace("new-releases/", "") if link_tag else None
         player_html = requests.get(link).text
         player_soup = BeautifulSoup(player_html, 'html.parser')
         tags = player_soup.select(".meta-data-info")[0].get_text(strip=True).split(",")
