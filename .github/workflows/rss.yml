@@ -32,5 +32,7 @@ jobs:
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
           git add feeds/
+          git add feeds.json
+          git add dropout_feed.xml
           git commit -m "Update per-show RSS feeds" || echo "No changes to commit"
           git push
