@@ -15,7 +15,7 @@
   <div id="feed-list">Loading feeds...</div>
 
   <script>
-    fetch('feeds.json')
+    fetch(`feeds.json?${Math.floor(Math.random()*(10**10))}`)
       .then(response => response.json())
       .then(data => {
         const container = document.getElementById('feed-list');
