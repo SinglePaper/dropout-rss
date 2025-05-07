@@ -81,12 +81,19 @@ feed_index_path = 'feeds.json'
 if os.path.exists(feed_index_path):
     with open(feed_index_path, 'r') as f:
         feed_index = json.load(f)
+        print("Prior feed index found!\n========================")
+        print(feed_index)
+        print()
 else:
+    print("No prior feed index. Creating new one...")
     feed_index = {}
 
 for series in videos_by_series:
     feed_filename = f'feeds/feed-{slugify(series)}.xml'
     feed_index[series] = feed_filename
+    print(f"Adding {series}: {feed_filename}")
+
+print("\nExporting feed index...\n========================\n",feed_index)
 
 with open('feeds.json', 'w') as f:
     json.dump(feed_index, f, indent=2)
