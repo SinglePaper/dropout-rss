@@ -56,7 +56,7 @@ videos_by_series = defaultdict(list)
 
 all_fg = FeedGenerator()
 all_fg.title("Dropout.tv - New Releases")
-all_fg.link(href=f"https://www.dropout.tv/browse", rel="alternative")
+all_fg.link(href=f'https://www.dropout.tv/browse', rel='alternate')
 all_fg.description(f'All releases from from Dropout.tv')
 
 for video in all_videos:
