@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
+from datetime import datetime
+from email.utils import format_datetime
 import os
 import re
 
@@ -52,8 +54,21 @@ for video in video_elements:
 from collections import defaultdict
 videos_by_series = defaultdict(list)
 
+all_fg = FeedGenerator()
+all_fg.title("Dropout.tv - New Releases")
+all_fg.link(href=f"https://www.dropout.tv/browse", rel="alternative")
+all_fg.description(f'All releases from from Dropout.tv')
+
 for video in all_videos:
     videos_by_series[video["series"]].append(video)
+
+    fe = all_fg.add_entry()
+    fe.title(f"{video['title']} - {video["series"]}")
+    fe.link(href=video['url'])
+    fe.description(f'<img src="{video["thumbnail"]}"/><br/><br/>{video["description"]}<br/><br/>Duration: {video["duration"]}<br/><br/>Tags: {", ".join(video["tags"])}')
+    fe.guid(video['url'])
+
+all_fg.rss_file("feeds/all.xml")
 
 # Generate one RSS feed per series
 os.makedirs("feeds", exist_ok=True)
