@@ -1,12 +1,30 @@
 import requests
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
-from datetime import datetime
-from email.utils import format_datetime
+from datetime import datetime,timezone
+import xml.etree.ElementTree as ET
 import os
 import re
 
+rss_feed_path = 'feeds/all.xml'
 
+def get_pub_date(video_id):
+    if os.path.exists(rss_feed_path):
+        try:
+            tree = ET.parse(rss_feed_path)
+            root = tree.getroot()
+
+            # Iterate through all <item> elements to find the video by ID
+            for item in root.findall(".//item"):
+                guid = item.find("guid").text
+                if guid and video_id in guid:  # Check if the video ID is in the GUID
+                    pub_date = item.find("pubDate").text
+                    return pub_date  # Return the found pubDate
+            
+        except Exception as e:
+            print(f"Error parsing {rss_feed_path}: {e}")
+    
+    return str(datetime.now(tz=timezone.utc).replace(minute=0,second=0,microsecond=0))  # If not found or an error occurred, return Today
 
 def slugify(title):
     return re.sub(r'\W+', '-', title.lower()).strip('-')
@@ -22,7 +40,6 @@ for video in video_elements:
     try:
         # Get video ID
         id = video["data-item-id"]
-
         # https://www.dropout.tv/dimension-20-s-adventuring-party/season:20/videos/a-cheeseburger-intimidation-check
 
 
@@ -37,8 +54,12 @@ for video in video_elements:
         thumbnail = img['src'].split("?")[0] if img else ''
         duration = video.select_one('.duration-container').get_text(strip=True)
         description = player_soup.find(id="watch-info").p.get_text(strip=True)
+        pubdate = get_pub_date(id)
+
 
         all_videos.append({
+            "id": id,
+            "pubdate": pubdate,
             "series": series,
             "title": title,
             "url": link,
@@ -66,7 +87,9 @@ for video in all_videos:
     fe.title(f"{video['title']} - {video["series"]}")
     fe.link(href=video['url'])
     fe.description(f'<img src="{video["thumbnail"]}"/><br/><br/>{video["description"]}<br/><br/>Duration: {video["duration"]}<br/><br/>Tags: {", ".join(video["tags"])}')
-    fe.guid(video['url'])
+    fe.guid(video['id'], permalink=True)
+    fe.pubDate(video['pubdate'])
+    # fe.id(video['id'])
 
 all_fg.rss_file("feeds/all.xml")
 
@@ -83,7 +106,9 @@ for series, videos in videos_by_series.items():
         fe.title(f"{v['title']}")
         fe.link(href=v['url'])
         fe.description(f'<img src="{v["thumbnail"]}"/><br/><br/>{v["description"]}<br/><br/>Duration: {v["duration"]}<br/><br/>Tags: {", ".join(v["tags"])}')
-        fe.guid(v['url'])
+        fe.guid(v['id'], permalink=True)
+        fe.pubDate(v['pubdate'])
+        # fe.id(video['id'])
 
     filename = f"feeds/feed-{slugify(series)}.xml"
     fg.rss_file(filename)
