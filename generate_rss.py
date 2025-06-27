@@ -87,9 +87,9 @@ for video in all_videos:
     fe.title(f"{video['title']} - {video["series"]}")
     fe.link(href=video['url'])
     fe.description(f'<img src="{video["thumbnail"]}"/><br/><br/>{video["description"]}<br/><br/>Duration: {video["duration"]}<br/><br/>Tags: {", ".join(video["tags"])}')
-    fe.guid(video['id'], permalink=True)
+    fe.guid(video['url'], permalink=True)
+    fe.id(video["id"])
     fe.pubDate(video['pubdate'])
-    # fe.id(video['id'])
 
 all_fg.rss_file("feeds/all.xml")
 
@@ -106,7 +106,8 @@ for series, videos in videos_by_series.items():
         fe.title(f"{v['title']}")
         fe.link(href=v['url'])
         fe.description(f'<img src="{v["thumbnail"]}"/><br/><br/>{v["description"]}<br/><br/>Duration: {v["duration"]}<br/><br/>Tags: {", ".join(v["tags"])}')
-        fe.guid(v['id'], permalink=True)
+        fe.guid(v['url'], permalink=True)
+        fe.id(v["id"])
         fe.pubDate(v['pubdate'])
         # fe.id(video['id'])
 
