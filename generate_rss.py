@@ -29,7 +29,7 @@ def get_pub_date(video_id):
 def slugify(title):
     return re.sub(r'\W+', '-', title.lower()).strip('-')
 
-url = 'https://www.dropout.tv/new-releases'
+url = 'https://watch.dropout.tv/new-releases'
 html = requests.get(url).text
 soup = BeautifulSoup(html, 'html.parser')
 
