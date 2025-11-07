@@ -16,5 +16,6 @@
   "Gastronauts": "feeds/feed-gastronauts.xml",
   "Crowd Control": "feeds/feed-crowd-control.xml",
   "Make Some Noise": "feeds/feed-make-some-noise.xml",
-  "anniversaries": "feeds/feed-anniversaries.xml"
+  "anniversaries": "feeds/feed-anniversaries.xml",
+  "announcements": "feeds/feed-announcements.xml"
 }
