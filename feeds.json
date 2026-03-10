@@ -19,5 +19,6 @@
   "anniversaries": "feeds/feed-anniversaries.xml",
   "announcements": "feeds/feed-announcements.xml",
   "Dimension 20 Animated": "feeds/feed-dimension-20-animated.xml",
-  "Don't Hug Me I'm Scared": "feeds/feed-don-t-hug-me-i-m-scared.xml"
+  "Don't Hug Me I'm Scared": "feeds/feed-don-t-hug-me-i-m-scared.xml",
+  "Toonout": "feeds/feed-toonout.xml"
 }
